@@ -1,8 +1,14 @@
 # -*- coding:UTF-8 -*-
 
+# 引入redis模块
+
 import redis
 
+# 引入定时器
+
 import threading
+
+# 连接redis数据库
 
 r = redis.Redis('localhost', 6379)
 
@@ -105,3 +111,84 @@ print 'inside_replace_text: %s' % r.get('text')
 r.setrange('text', r.strlen('text'), ' again')
 
 print 'outside_replate_text: %s' % r.get('text')
+
+# 对二进制表示位进行操作
+
+r.set('str', '345')
+
+for item in r.get('str'):
+    print '值: %s' % item
+    print 'ASCII码中对应的值: %s' % ord(item)
+    print '对应值转换的二进制: %s' % bin(ord(item))
+
+r.setbit('str', 6, 0) 
+
+print 'str: %s' % r.get('str')
+
+# 获取对应值的二进制中某位置的值(0或1)
+
+r.set('head', 'one')
+
+for item in r.get('head'):
+    print '值: %s' % item
+    print 'ASCII码中对应的值: %s' % ord(item)
+    print '对应值转换的二进制: %s' % bin(ord(item))
+
+print 'head 6 位置上的值: %s' % r.getbit('head', 6)
+
+# 获取对应二进制中 1 的个数
+
+r.set('ear', 'two')
+
+for item in r.get('ear'):
+    print '值: %s' % item
+    print 'ASCII码中对应的值: %s' % ord(item)
+    print '对应值转换的二进制: %s' % bin(ord(item))
+
+print 'ear二进制 1 的个数: %d' % r.bitcount('ear', 0, 2)
+
+# 返回对应值的字节长度(一个汉字3个字节)
+
+r.set('bird', '小鸟')
+
+print 'bird的字节长度: %d' % r.strlen('bird')
+
+# 自增对应的值，当值不存在时，则创建，否则则自增 incr 自增整数
+
+r.incr('kite')
+
+print 'incr_first: %s' % r.get('kite')
+
+r.incr('kite', 4)
+
+print 'incr_second: %s' % r.get('kite')
+
+# 自增 incrfloat 自增浮点数
+
+r.incrbyfloat('caryon')
+
+print 'incrbyfloat_first: %s' % r.get('caryon')
+
+r.incrbyfloat('caryon', 0.4)
+
+print 'incrbyfloat_second: %s' % r.get('caryon')
+
+# 自减 decr 自减整数
+
+r.decr('height')
+
+print 'decr_first: %s' % r.get('height')
+
+r.decr('height', 5)
+
+print 'decr_second: %s' % r.get('height')
+
+# 在对应的值后面追加内容 append
+
+r.set('food', 'food')
+
+print 'food的值: %s' % r.get('food')
+
+r.append('food', 's')
+
+print '向food值后追加’s‘: %s' % r.get('food')
